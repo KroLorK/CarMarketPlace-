@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sixtyfour+Convergence&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+#profile {
+    color: green;
+    background-color: #4CAF50; /* Зелёный цвет фона */
+        border: none;               /* Без границы */
+        color: white;               /* Белый цвет текста */
+        padding: 15px 32px;        /* Внутренние отступы */
+        text-align: center;         /* Центрирование текста */
+        text-decoration: none;      /* Без подчеркивания */
+        display: inline-block;      /* Отображение в строке */
+        font-size: 16px;           /* Размер шрифта */
+        margin: 4px 2px;           /* Внешние отступы */
+        cursor: pointer;            /* Курсор в виде руки при наведении */
+        border-radius: 4px;        /* Скругление углов */
+        transition: background-color 0.3s;
+}
+
+.bmw_photo {
+    width: 200px;
+    height: 200px;
+    margin: 100px;
+}
+
+.bmw_description {
+    margin-left: 100px;
+    padding: 100px;
+}

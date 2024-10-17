@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АвтоРынок</title>
+    <link rel = "stylesheet" href = "/css/main.css"
+</head>
+<body>
+    <h1> Добро пожаловать!</h1>
+    <header class="container">
+        <span class="logo">logo</span>
+        <nav>
+            <ul>
+                <li  class="active"><a href="#">HOME</a></li>
+                <li><a href = "#">Профиль</a></li>
+                <li><a href="#">NEWs</a></li>
+                <li class="btn"><a href="#">Contacts</a></li>
+            </ul>
+        </nav>
+
+    <button id = "profile">Профиль</button>
+
+    <script>
+        document.getElementById('profile').addEventListener('click', function() {
+        window.location.href = "profile.html";
+    });
+    </script>
+    <img src = "cars/bmw.jpeg" class = "bmw_photo" >
+
+    <section class="bmw_description">
+        <ol>
+            <li>Мощность двигателя: 300 л.с.</li>
+            <li>Масса: 1000 кг.</li>
+        </ol>
+        <p>
+            Я люблю бмв
+        </p>
+        <ul>
+            <li>масло</li>
+            <li>хлеб</li>
+        </ul>
+    </section>
+
+</body>
+</html>
