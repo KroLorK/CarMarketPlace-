@@ -5,13 +5,21 @@
     padding: 0;
 }
 
-body {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 400;
-
+html{
+    height: auto;
+    font-weight: auto;
 }
 
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: auto;
+    height: auto;
+    margin: 0 auto;
+}
+
+
 a {
+    color: rgb(194, 138, 138);
     text-decoration: none;
 }
 
@@ -20,19 +28,32 @@ img {
 }
 
 #profile {
-    color: green;
-    background-color: #4CAF50; /* Зелёный цвет фона */
-        border: none;               /* Без границы */
-        color: white;               /* Белый цвет текста */
-        padding: 15px 32px;        /* Внутренние отступы */
-        text-align: center;         /* Центрирование текста */
-        text-decoration: none;      /* Без подчеркивания */
-        display: inline-block;      /* Отображение в строке */
-        font-size: 16px;           /* Размер шрифта */
-        margin: 4px 2px;           /* Внешние отступы */
-        cursor: pointer;            /* Курсор в виде руки при наведении */
-        border-radius: 4px;        /* Скругление углов */
-        transition: background-color 0.3s;
+    
+    max-width: 100%;
+    background-color: white; /* Зелёный цвет фона */
+    border: none;               /* Без границы */
+    color: white;               /* Белый цвет текста */
+    padding: 15px 32px;        /* Внутренние отступы */
+    text-align: center;         /* Центрирование текста */
+    text-decoration: none;      /* Без подчеркивания */
+    display: inline-block;      /* Отображение в строке */
+    font-size: 16px;           /* Размер шрифта */
+    margin: 4px 2px;           /* Внешние отступы */
+    cursor: pointer;            /* Курсор в виде руки при наведении */
+    border-radius: 4px;        /* Скругление углов */
+    transition: background-color 0.3s;
+}
+
+.container{
+    display:flex;
+    justify-content: space-between; /* Разделяем элементы */
+    align-items: center; /* Выравниваем элементы по центру вертикально */
+    padding: 10px; 
+}
+
+.logo_png{
+    width: 90px;
+    height: 90px;
 }
 
 .bmw_photo {
@@ -44,4 +65,24 @@ img {
 .bmw_description {
     margin-left: 100px;
     padding: 100px;
+}
+
+.header_section {
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+    display: flex;
+}
+
+.header_section li {
+    margin-right: 100px;
+}
+
+
+
+.fon {
+    background: linear-gradient(0deg, rgba(212,205,141,1) 0%, rgba(224,255,248,0.8880357074470413) 100%);
+    width: 100%;
+    min-height: 100vh; /* Минимальная высота 100% от высоты вьюпорта */
+    height: auto; /* Автоматическая высота */
 }
