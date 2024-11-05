@@ -3,38 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>АвтоРынок</title>
+    <title>Car Market Place</title>
     <link rel = "stylesheet" href = "/css/main.css">
 </head>
 <body>
-    <div class="fon">
-        <header class="container">
-            <img src="images/logo.png" class="logo_png">
-            <nav>
-                <ul class="header_section">
-                    <li><a href="#">Объявления</a></li>
-                    <li><a href="#">Профиль</a></li>
-                    <li><a href="about_us">О нас</a></li>
-                </ul>
-            </nav>
-        </header>
     
-        <script>
-            document.getElementById('profile').addEventListener('click', function() {
-            window.location.href = "profile.html";
-        });
-        </script>
+    <header class="container">
+        <img src="images/logo.png" class="logo_png">
+        <div class = "title">Car Market Place</div>
+        <nav>
+            <ul class="header_section">
+                <li><button id = "main" class = "button_on_page">Главная</button></li>
+                <li><button id = "profile" class = "header_section_button">Профиль</button></li>
+                <li><button id = "about_us" class = "header_section_button">О нас</button></li>
+            </ul>
+        </nav>
+    </header>
 
-        <img src = "cars/bmw.jpeg" class = "bmw_photo" >
+    <script>
+        document.getElementById("profile").onclick = function() {window.location.href = "profile.html";}
+        document.getElementById("main").onclick = function() {window.location.href = "index.html";}
+        document.getElementById("about_us").onclick = function() {window.location.href = "about_us.html";}
+    </script>
 
-        <section class="bmw_description">
-            <ol>
-                <li>Мощность двигателя: 300 л.с.</li>
-                <li>Масса: 1000 кг.</li>
-            </ol>
-            <p>Я люблю бмв</p>
-        </section>
-    </div>
+   <h2 class = "search_ad">Поиск объявлений</h2>
+   <p id = 'brand_1'></p>
+   <img id = "brand_1_image">
+   <script>
+    
+   
+    // Функция для получения данных из сервера и отображения их в HTML
+    fetch('http://localhost:3000/data')
+    .then(response => {
+        if (!response.ok) { // Проверяем, успешен ли ответ
+            throw new Error('Сетевая ошибка: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Проверяем, что данные не пустые
+        if (data.length > 0) {
+            // Предполагаем, что мы получаем массив из одной записи
+            const item = data[0];
+
+            // Заполняем элемент h2 заголовком
+            document.getElementById('brand_1').textContent = item.name;
+
+            // Заполняем элемент img src ссылкой на изображение
+            document.getElementById('brand_1_image').src = item.photo;
+        } else {
+            console.log('Нет данных для отображения.');
+        }
+    })
+    .catch(error => console.error('Ошибка при получении данных:', error));
+
+    </script>
     
 </body>
 </html>

@@ -4,8 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Профиль</title>
+    <link rel = "stylesheet" href = "/css/main.css">
 </head>
 <body>
-    
+    <header class="container">
+        <img src="images/logo.png" class="logo_png">
+        <div class = "title">Car Market Place</div>
+        <nav>
+            <ul class="header_section">
+                <li><button id = "main" class = "header_section_button">Главная</button></li>
+                <li><button id = "profile" class = "button_on_page">Профиль</button></li>
+                <li><button id = "about_us" class = "header_section_button">О нас</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <script>
+        document.getElementById("profile").onclick = function() {window.location.href = "profile.html";}
+        document.getElementById("main").onclick = function() {window.location.href = "index.html";}
+        document.getElementById("about_us").onclick = function() {window.location.href = "about_us.html";}
+    </script>
 </body>
 </html>
