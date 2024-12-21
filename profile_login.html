@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя - Car Market Place</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        /* Основные стили для страницы профиля */
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Open Sans', sans-serif;
+            padding: 20px;
+        }
+
+        .profile-container {
+            background-color: rgba(255, 235, 205, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .profile-header {
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: rgb(141, 65, 65);
+        }
+
+        .profile-info {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .profile-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: rgb(141, 65, 65);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .profile-button:hover {
+            color: white;
+            background-color: rgb(200, 80, 80);
+        }
+
+        /* Стили для формы добавления автомобиля */
+        .car-form {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 235, 205, 0.9);
+        }
+
+        .form-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-field {
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-field label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-field select,
+        .form-field input {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid rgb(141, 65, 65);
+            border-radius: 5px;
+        }
+
+        .submit-car-button {
+            padding: 10px 20px;
+            background-color: rgb(141, 65, 65);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 15px auto; /* Центрирование кнопки */
+            display: block; /* Превращаем в блочный элемент */
+            width: fit-content; /* Подстраиваем ширину под содержимое */
+        }
+
+        .submit-car-button:hover {
+            color: white;
+            background-color: rgb(200, 80, 80);
+        }
+
+        /* Стили для списка автомобилей */
+        .car-list {
+            margin-top: 30px;
+        }
+
+        .no-cars-message {
+            color: rgb(141, 65, 65);
+            font-style: italic;
+            text-align: center;
+        }
+
+        .car-item {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid rgb(141, 65, 65);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="container">
+        <img src="images/logo.png" class="logo_png" alt="Car Market Place Logo">
+        <div class="title">Car Market Place</div>
+        <nav>
+            <ul class="header_section">
+                <li><button id="main" class="button_on_page">Главная</button></li>
+                <li><button id="profile" class="header_section_button">Профиль</button></li>
+                <li><button id="about_us" class="header_section_button">О нас</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <script>
+        document.getElementById("profile").onclick = function () { window.location.href = "profile_login.html"; }
+        document.getElementById("main").onclick = function () { window.location.href = "index.html"; }
+        document.getElementById("about_us").onclick = function () { window.location.href = "about_us.html"; }
+    </script>
+
+    <div class="profile-container">
+        <h2 class="profile-header">Ваш Профиль</h2>
+        <div class="profile-info">
+            <p><strong>Имя:</strong> <span id="first_name">Загрузка...</span></p>
+            <p><strong>Фамилия:</strong> <span id="last_name">Загрузка...</span></p>
+            <p><strong>Email:</strong> <span id="email">Загрузка...</span></p>
+        </div>
+        <button class="profile-button" onclick="window.location.href='ads.html'">Перейти к объявлениям</button>
+    </div>
+
+    <h2 class="search_ad">Ваши Автомобили</h2>
+    <section class="ads car-list" id="carList">
+        <div class="no-cars-message" id="noCarsMessage">У вас пока нет автомобилей.</div>
+        <ul class="ads_ul" id="carsUl">
+            <!-- Здесь будут загружены автомобили -->
+        </ul>
+    </section>
+
+    <button class="submit-car-button" id="addCarButton">Добавить Автомобиль</button>
+
+    <div class="car-form" id="carForm" style="display: none;">
+        <h2 class="form-title">Добавить Автомобиль</h2>
+        <div class="form-field">
+            <label for="brand">Марка</label>
+            <select id="brand" required>
+                <option value="">Выберите марку</option>
+                <!-- Здесь будут загружены марки автомобилей -->
+            </select>
+        </div>
+        <div class="form-field">
+            <label for="model">Модель</label>
+            <select id="model" disabled required>
+                <option value="">Выберите модель</option>
+                <!-- Здесь будут загружены модели автомобилей -->
+            </select>
+        </div>
+        <div class="form-field">
+            <label for="mileage">Пробег (км)</label>
+            <input type="number" id="mileage" placeholder="Введите пробег" required>
+        </div>
+        <div class="form-field">
+            <label for="year">Год выпуска</label>
+            <input type="text" id="year" placeholder="Введите год выпуска" required>
+        </div>
+        <button class="submit-car-button" id="submitCar">Добавить автомобиль</button>
+    </div>
+
+    <div id="editMenu" style="display: none; position: absolute; background: white; border: 1px solid #ccc; border-radius: 5px; padding: 10px; z-index: 100;">
+        <h3>Редактировать автомобиль</h3>
+        <div class="form-field">
+            <label for="editYear">Год выпуска</label>
+            <input type="text" id="editYear" placeholder="Введите год выпуска" required>
+        </div>
+        <div class="form-field">
+            <label for="editMileage">Пробег (км)</label>
+            <input type="number" id="editMileage" placeholder="Введите пробег" required>
+        </div>
+        <button id="saveChangesButton">Сохранить изменения</button>
+        <button id="deleteCarButton" style="background-color: red; color: white;">Удалить автомобиль</button>
+    </div>
+
+    <h2 class="search_ad">Ваши Объявления</h2>
+    <section class="ads">
+        <ul class="ads_ul">
+            <li onclick="window.location.href='ads.html'">
+                <p id="brand_1" class="brand_text">Загрузка...</p>
+                <img id="brand_1_image" class="brand_image" alt="Car Image">
+            </li>
+            <li onclick="window.location.href='ads.html'">
+                <p id="brand_2" class="brand_text">Загрузка...</p>
+                <img id="brand_2_image" class="brand_image" alt="Car Image">
+            </li>
+            <li onclick="window.location.href='ads.html'">
+                <p id="brand_3" class="brand_text">Загрузка...</p>
+                <img id="brand_3_image" class="brand_image" alt="Car Image">
+            </li>
+            <li onclick="window.location.href='ads.html'">
+                <p id="brand_4" class="brand_text">Загрузка...</p>
+                <img id="brand_4_image" class="brand_image" alt="Car Image">
+            </li>
+        </ul>
+    </section>
+
+    <script>
+        // Получение данных о пользователе
+        const user = {
+            first_name: localStorage.getItem('first_name'),
+            last_name: localStorage.getItem('last_name'),
+            email: localStorage.getItem('email'),
+            id: localStorage.getItem('user_id') // ID пользователя
+        };
+
+        if (user.first_name && user.last_name && user.email) {
+            document.getElementById('first_name').innerText = user.first_name;
+            document.getElementById('last_name').innerText = user.last_name;
+            document.getElementById('email').innerText = user.email;
+        } else {
+            alert("Пожалуйста, войдите в систему.");
+            window.location.href = 'index.html'; // Перенаправление на главную страницу
+        }
+
+        // Загрузка марок автомобилей
+        fetch('http://localhost:3000/data')  // Путь к API для загрузки марок
+            .then(response => {
+                if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
+                return response.json();
+            })
+            .then(brands => {
+                const brandSelect = document.getElementById('brand');
+                brands.forEach(brand => {
+                    const option = document.createElement('option');
+                    option.value = brand.id;
+                    option.textContent = brand.name;
+                    brandSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Ошибка при получении данных:', error));
+
+        // При изменении выбранного бренда загружаем модели
+        document.getElementById('brand').addEventListener('change', function () {
+            const brandId = this.value;
+            const modelSelect = document.getElementById('model');
+            modelSelect.innerHTML = '<option value="">Выберите модель</option>'; // сбрасываем модели
+            modelSelect.disabled = true;
+
+            if (brandId) {
+                fetch(`http://localhost:3000/models?brand_id=${brandId}`) // Запрос моделей для выбранного бренда
+                    .then(response => response.json())
+                    .then(models => {
+                        models.forEach(model => {
+                            const option = document.createElement('option');
+                            option.value = model.id;
+                            option.textContent = model.name;
+                            modelSelect.appendChild(option);
+                        });
+                        modelSelect.disabled = false; // включаем выбор модели
+                    })
+                    .catch(error => console.error('Ошибка при получении моделей:', error));
+            }
+        });
+
+        document.getElementById('submitCar').addEventListener('click', () => {
+            const mileage = document.getElementById('mileage').value.trim();
+            const year = document.getElementById('year').value.trim();
+            const modelId = document.getElementById('model').value;
+
+            if (!mileage || !year || !modelId) {
+                alert('Пожалуйста, заполните все поля!'); // Проверьте заполненность полей
+                return;
+            }
+
+            // Проверка на корректность введенных данных
+            if (isNaN(mileage) || isNaN(year)) {
+                alert('Пробег и год должны быть числами!');
+                return;
+            }
+
+            fetch('http://localhost:3000/cars', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mileage: parseInt(mileage), // Пробег как число
+                    year: year, // Год как строка
+                    model_id: modelId,
+                    user_id: user.id // Передаем ID пользователя
+                }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка добавления автомобиля');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message); // Успешное добавление
+                    // Очистка формы и обновление списка автомобилей
+                    document.getElementById('mileage').value = '';
+                    document.getElementById('year').value = '';
+                    document.getElementById('model').value = '';
+                    document.getElementById('brand').value = '';
+                    loadUserCars(); // Перезагрузить список автомобилей
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Ошибка: ' + error.message); // Сообщение об ошибке
+                });
+        });
+
+        // Загрузка автомобилей пользователя
+        function loadUserCars() {
+            fetch(`http://localhost:3000/cars?user_id=${user.id}`) // Получаем автомобили для пользователя
+                .then(response => {
+                    if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
+                    return response.json();
+                })
+                .then(cars => {
+                    const carsUl = document.getElementById('carsUl');
+                    const noCarsMessage = document.getElementById('noCarsMessage');
+                    carsUl.innerHTML = ''; // Очищаем список автомобилей
+                    if (cars.length === 0) {
+                        noCarsMessage.style.display = 'block'; // Показываем сообщение, если автомобилей нет
+                    } else {
+                        noCarsMessage.style.display = 'none'; // Скрываем сообщение
+                        cars.forEach(car => {
+                            const li = document.createElement('li');
+                            li.className = 'car-item';
+                            li.dataset.car = JSON.stringify(car);  // Сохраняем данные автомобиля
+                            li.textContent = `Год: ${car.year}, Пробег: ${car.mileage} км, Модель: ${car.model}`;
+                            carsUl.appendChild(li);
+                        });
+                    }
+                })
+                .catch(error => console.error('Ошибка при получении автомобилей:', error));
+        }
+
+        // Инициализация загрузки автомобилей
+        loadUserCars();
+
+        // Загрузка объявлений
+        fetch('http://localhost:3000/data')
+            .then(response => {
+                if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
+                return response.json();
+            })
+            .then(data => {
+                const maxItems = 4; // Количество объявлений
+                for (let i = 0; i < maxItems; i++) {
+                    const item = data[i] || { name: 'Без названия', photo: 'placeholder.jpg' };
+                    document.getElementById(`brand_${i + 1}`).textContent = item.name;
+                    document.getElementById(`brand_${i + 1}_image`).src = item.photo;
+                }
+            })
+            .catch(error => console.error('Ошибка при получении данных:', error));
+
+        // Отображение формы добавления автомобиля
+        document.getElementById('addCarButton').addEventListener('click', () => {
+            const carForm = document.getElementById('carForm');
+            carForm.style.display = (carForm.style.display === 'none' || carForm.style.display === '') ? 'block' : 'none';
+        });
+
+        document.getElementById('carsUl').addEventListener('click', function (event) {
+            const target = event.target.closest('.car-item');
+            if (!target) return;
+
+            // Позиционирование меню
+            const editMenu = document.getElementById('editMenu');
+            const rect = target.getBoundingClientRect();
+            editMenu.style.left = `${rect.right + 10}px`;
+            editMenu.style.top = `${rect.top}px`;
+            editMenu.style.display = 'block';
+
+            // Заполнение формы текущими данными
+            const carData = JSON.parse(target.dataset.car); // Данные автомобиля
+            document.getElementById('editYear').value = carData.year;
+            document.getElementById('editMileage').value = carData.mileage;
+            
+            // Сохранение изменений
+            document.getElementById('saveChangesButton').onclick = () => {
+                const updatedYear = document.getElementById('editYear').value.trim();
+                const updatedMileage = document.getElementById('editMileage').value.trim();
+
+                if (!updatedYear || !updatedMileage) {
+                    alert('Пожалуйста, заполните все поля!');
+                    return;
+                }
+
+                fetch(`http://localhost:3000/cars/${carData.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        year: updatedYear,
+                        mileage: parseInt(updatedMileage),
+                        model_id: carData.model_id // Добавляем model_id, если необходимо обновить его
+                    }),
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Ошибка обновления автомобиля');
+                        return response.json();
+                    })
+                    .then(() => {
+                        alert('Автомобиль обновлен!');
+                        editMenu.style.display = 'none';
+                        loadUserCars(); // Перезагрузить список автомобилей
+                    })
+                    .catch(error => alert('Ошибка: ' + error.message));
+            };
+
+            // Удаление автомобиля
+            document.getElementById('deleteCarButton').onclick = () => {
+                fetch(`http://localhost:3000/cars/${carData.id}`, {
+                    method: 'DELETE',
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Ошибка удаления автомобиля');
+                        alert('Автомобиль удален!');
+                        editMenu.style.display = 'none';
+                        loadUserCars(); // Перезагрузить список автомобилей
+                    })
+                    .catch(error => alert('Ошибка: ' + error.message));
+            };
+        });
+
+        // Закрытие меню при клике вне его
+        document.addEventListener('click', (event) => {
+            const editMenu = document.getElementById('editMenu');
+            if (!editMenu.contains(event.target) && !event.target.classList.contains('car-item')) {
+                editMenu.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
