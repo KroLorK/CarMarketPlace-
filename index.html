@@ -4,60 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Market Place</title>
-    <link rel = "stylesheet" href = "/css/main.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .ads_ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ads_ul li {
+            background-color: rgba(255, 235, 205, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 300px;
+            margin: 15px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .ads_ul li:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .brand_image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .brand_text {
+            font-size: 18px;
+            font-weight: bold;
+            color: rgb(141, 65, 65);
+        }
+    </style>
 </head>
 <body>
-    
     <header class="container">
-        <img src="images/logo.png" class="logo_png">
-        <div class = "title">Car Market Place</div>
+        <img src="images/logo.png" class="logo_png" alt="Car Market Place Logo">
+        <div class="title">Car Market Place</div>
         <nav>
             <ul class="header_section">
-                <li><button id = "main" class = "button_on_page">Главная</button></li>
-                <li><button id = "profile" class = "header_section_button">Профиль</button></li>
-                <li><button id = "about_us" class = "header_section_button">О нас</button></li>
+                <li><button id="main" class="button_on_page">Главная</button></li>
+                <li><button id="profile" class="header_section_button">Профиль</button></li>
+                <li><button id="about_us" class="header_section_button">О нас</button></li>
             </ul>
         </nav>
     </header>
 
     <script>
-        document.getElementById("profile").onclick = function() {window.location.href = "profile.html";}
-        document.getElementById("main").onclick = function() {window.location.href = "index.html";}
-        document.getElementById("about_us").onclick = function() {window.location.href = "about_us.html";}
+        document.getElementById("profile").onclick = function() { window.location.href = "profile.html"; }
+        document.getElementById("main").onclick = function() { window.location.href = "index.html"; }
+        document.getElementById("about_us").onclick = function() { window.location.href = "about_us.html"; }
     </script>
 
-   <h2 class = "search_ad">Поиск объявлений</h2>
-   <p id = 'brand_1'></p>
-   <img id = "brand_1_image">
-   <script>
-    
-   
-    // Функция для получения данных из сервера и отображения их в HTML
-    fetch('http://localhost:3000/data')
-    .then(response => {
-        if (!response.ok) { // Проверяем, успешен ли ответ
-            throw new Error('Сетевая ошибка: ' + response.status);
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Проверяем, что данные не пустые
-        if (data.length > 0) {
-            // Предполагаем, что мы получаем массив из одной записи
-            const item = data[0];
+    <h2 class="search_ad">Поиск объявлений</h2>
 
-            // Заполняем элемент h2 заголовком
-            document.getElementById('brand_1').textContent = item.name;
+    <section class="ads">
+        <ul class="ads_ul">
+            <li>
+                <p id="brand_1" class="brand_text">Загрузка...</p>
+                <img id="brand_1_image" class="brand_image" alt="Car Image">
+            </li>
+            <li>
+                <p id="brand_2" class="brand_text">Загрузка...</p>
+                <img id="brand_2_image" class="brand_image" alt="Car Image">
+            </li>
+            <li>
+                <p id="brand_3" class="brand_text">Загрузка...</p>
+                <img id="brand_3_image" class="brand_image" alt="Car Image">
+            </li>
+            <li>
+                <p id="brand_4" class="brand_text">Загрузка...</p>
+                <img id="brand_4_image" class="brand_image" alt="Car Image">
+            </li>
+            
+        </ul>
+    </section>
 
-            // Заполняем элемент img src ссылкой на изображение
-            document.getElementById('brand_1_image').src = item.photo;
-        } else {
-            console.log('Нет данных для отображения.');
-        }
-    })
-    .catch(error => console.error('Ошибка при получении данных:', error));
-
+    <script>
+        fetch('http://localhost:3000/data')
+            .then(response => {
+                if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
+                return response.json();
+            })
+            .then(data => {
+                const maxItems = 5; // Количество объявлений
+                for (let i = 0; i < maxItems; i++) {
+                    const item = data[i] || { name: 'Без названия', photo: 'placeholder.jpg' };
+                    document.getElementById(`brand_${i + 1}`).textContent = item.name;
+                    document.getElementById(`brand_${i + 1}_image`).src = item.photo;
+                }
+            })
+            .catch(error => console.error('Ошибка при получении данных:', error));
     </script>
-    
 </body>
 </html>

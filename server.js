@@ -1,21 +1,23 @@
+// Импортируем необходимые модули
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
+const { Pool } = require('pg');
 const path = require('path');
-const cors = require('cors'); // Импортируем cors
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
 
-// Настройка подключения к базе данных
-const db = new sqlite3.Database('C:/Users/kotel/DataGripProjects/car_market/identifier.sqlite');
-
-// Используем cors для разрешения кросс-доменных запросов
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*"); // разрешаем доступ к ресурсу любому источнику
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+// Настройка подключения к базе данных PostgreSQL
+const pool = new Pool({
+    user: 'postgres', // Замените на имя пользователя PostgreSQL
+    host: 'localhost', // Хост базы данных
+    database: 'car_market_place', // Имя базы данных
+    password: '1509', // Пароль пользователя
+    port: 5432, // Порт PostgreSQL (по умолчанию 5432)
 });
 
+// Используем cors для разрешения кросс-доменных запросов
+app.use(cors());
 
 // Настройка статических файлов
 app.use(express.static(__dirname));
@@ -26,20 +28,18 @@ app.get('/', (req, res) => {
 });
 
 // Маршрут для получения данных
-app.get('/data', (req, res) => {
-    db.all('SELECT * FROM brands', [], (err, rows) => {
-        if (err) {
-            console.error('Ошибка при запросе к базе данных:', err);
-            res.status(500).json({ error: 'Ошибка сервера' });
-            return;
-        }
-        console.log('Данные из базы данных:', rows); // Выводим данные в консоль
-        res.json(rows); // Возвращаем данные в формате JSON
-    });
+app.get('/data', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM brands'); // Выполняем запрос к базе данных
+        console.log('Данные из базы данных:', result.rows); // Выводим данные в консоль
+        res.json(result.rows); // Возвращаем данные в формате JSON
+    } catch (err) {
+        console.error('Ошибка при запросе к базе данных:', err);
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
 });
 
 // Начало прослушивания сервера
 app.listen(port, () => {
     console.log(`Сервер запущен на http://localhost:${port}`);
 });
-

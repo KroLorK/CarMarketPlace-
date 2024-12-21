@@ -44,15 +44,15 @@ img {
     height: 90px;
 }
 
-.bmw_photo {
-    width: 200px;
-    height: 200px;
-    margin: 100px;
+button:hover {
+    color: rgb(255, 0, 0); 
 }
 
-.bmw_description {
-    margin-left: 100px;
-    padding: 100px;
+.button_on_page {
+    background-color: rgba(255, 255, 255, 0);
+    border:none;
+    cursor: pointer; 
+    color:rgb(141, 65, 65);
 }
 
 .header_section {
@@ -77,22 +77,6 @@ button:hover {
     color: rgb(255, 0, 0); 
 }
 
-.button_on_page {
-    background-color: rgba(255, 255, 255, 0);
-    border:none;
-    cursor: pointer; 
-    color:rgb(141, 65, 65);
-}
-
-.search_ad {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: auto;
-    margin-top: 40px;
-    margin-left: 40px;
-    font-size: 24px;
-    font-weight: 600;
-}
-
 .title {
     font-family: "Playwrite GB S", cursive;
     margin-left: -48%;
@@ -101,33 +85,21 @@ button:hover {
     font-style: normal;
 }
 
-.ads {
-    padding: 3%;
-}
+.reg_form {
+    margin-left: 35%;
+    margin-top: 10%;
+    margin-bottom: 20px;
+    width: 600px;
+    height: 400px;
+    background-color: rgba(255, 235, 205, 0.379);
 
-.brand_image {
-    width: 130px;
-    height: 95px;
 }
-
-.brand_text {
-    margin-left: 35px;
-    margin-bottom: 0px;
-    margin-top: 0%;
+.reg_label {
+    margin-bottom: 15px;
+    margin-top: 10px;
+    display: block;
 }
-
-.ads_ul {
-    list-style: none;
-    display: flex;
-    margin: 0%;
-    padding: 0%;
-}
-
-.ads_ul :hover {
-    color:rgb(237, 64, 76);
-    cursor: pointer;
-}
-
-.ads_ul li {
-    margin-right: 4%;
+.input_box {
+    height: 25px;
+    width: 400px;
 }
