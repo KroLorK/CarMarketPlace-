@@ -57,6 +57,45 @@
         .submit_button:hover {
             background-color: rgb(200, 80, 80);
         }
+
+        /* Стили для модального окна */
+        .modal {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed; /* Остается на месте */
+            z-index: 1; /* Ставим на верхний слой */
+            left: 0;
+            top: 0;
+            width: 100%; /* Полная ширина */
+            height: 100%; /* Полная высота */
+            overflow: auto; /* Скроллинг, если необходимо */
+            background-color: rgb(0,0,0); /* Цвет фона */
+            background-color: rgba(0,0,0,0.4); /* Чуть прозрачный черный */
+            padding-top: 60px; /* Отступ сверху */
+        }
+        
+        .modal_content {
+            background-color: #fefefe;
+            margin: 5% auto; /* 15% сверху и снизу */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 400px; /* Ширина окна */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -86,6 +125,169 @@
         <input type="password" id="password" class="input_box" placeholder="Введите ваш пароль">
 
         <button class="submit_button">Войти</button>
+        
+        <!-- Кнопка регистрации -->
+        <button id="registerButton" class="submit_button" style="margin-top: 15px;">Регистрация</button>
     </div>
+
+    <!-- Модальное окно для регистрации -->
+    <div id="registerModal" class="modal">
+        <div class="modal_content">
+            <span class="close">&times;</span>
+            <h2>Регистрация</h2>
+            
+            <label class="reg_label" for="surname">Фамилия</label>
+            <input type="text" id="surname" class="input_box" placeholder="Введите вашу фамилию">
+
+            <label class="reg_label" for="name">Имя</label>
+            <input type="text" id="name" class="input_box" placeholder="Введите ваше имя">
+            
+            <label class="reg_label" for="reg_email">Введите адрес электронной почты</label>
+            <input type="email" id="reg_email" class="input_box" placeholder="example@mail.com">
+            
+            <label class="reg_label" for="reg_password">Введите пароль</label>
+            <input type="password" id="reg_password" class="input_box" placeholder="Введите ваш пароль">
+            
+            <button id="registerSubmitButton" class="submit_button">Зарегистрироваться</button>
+        </div>
+    </div>
+
+    <script>
+        // Получаем модальное окно
+        var modal = document.getElementById("registerModal");
+
+        // Получаем кнопку, которая открывает модальное окно
+        var btn = document.getElementById("registerButton");
+
+        // Получаем элемент <span>, который закрывает модальное окно
+        var span = document.getElementsByClassName("close")[0];
+
+        // Когда пользователь нажимает на кнопку, открываем модальное окно 
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // Когда пользователь нажимает на <span> (x), закрываем модальное окно
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Когда пользователь нажимает в любом месте вне модального окна, закрываем его
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Обработчик нажатия кнопки "Зарегистрироваться"
+        document.getElementById('registerSubmitButton').onclick = function() {
+            const surname = document.getElementById('surname').value;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('reg_email').value;
+            const password = document.getElementById('reg_password').value;
+
+            // Отправка данных на сервер
+            fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    first_name: name,
+                    last_name: surname,
+                    password: password,
+                    email: email
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка при регистрации');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message); // Уведомление об успешной регистрации
+                modal.style.display = "none"; // Закрываем модальное окно
+                // Здесь можно очистить поля формы
+                document.getElementById('surname').value = '';
+                document.getElementById('name').value = '';
+                document.getElementById('reg_email').value = '';
+                document.getElementById('reg_password').value = '';
+            })
+            .catch((error) => {
+                console.error('Ошибка:', error);
+                alert('Ошибка при регистрации: ' + error.message);
+            });
+        };
+    </script>
+    <script>
+        // Обработчик нажатия кнопки "Войти"
+        document.querySelector('.submit_button').onclick = function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            // Отправка данных на сервер
+            fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Неверные учетные данные');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message); // Успешный вход
+                window.location.href = '/dashboard.html'; // Перенаправление на главную страницу профиля
+            })
+            .catch(error => {
+                console.error('Ошибка авторизации:', error);
+                alert('Ошибка авторизации: ' + error.message);
+            });
+        };
+    </script>
+    <script>
+        // Обработчик нажатия кнопки "Войти"
+        document.querySelector('.submit_button').onclick = function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            // Отправка данных на сервер
+            fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Неверные учетные данные');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message); // Успешный вход
+                // Перенаправление на страницу профиля или дэшборда
+                window.location.href = '/dashboard.html'; // Измените на ваш путь к главной части приложения
+            })
+            .catch(error => {
+                console.error('Ошибка авторизации:', error);
+                alert('Ошибка авторизации: ' + error.message);
+            });
+        };
+    </script>
+    
+    
 </body>
 </html>

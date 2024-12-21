@@ -25,6 +25,7 @@
             margin: 15px;
             text-align: center;
             padding: 20px;
+            cursor: pointer;
         }
 
         .ads_ul li:hover {
@@ -43,6 +44,25 @@
             font-size: 18px;
             font-weight: bold;
             color: rgb(141, 65, 65);
+        }
+
+        .view_all_button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: rgb(141, 65, 65);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .view_all_button:hover {
+            background-color: rgb(200, 80, 80);
         }
     </style>
 </head>
@@ -69,24 +89,24 @@
 
     <section class="ads">
         <ul class="ads_ul">
-            <li>
+            <li onclick="window.location.href='ads.html'">
                 <p id="brand_1" class="brand_text">Загрузка...</p>
                 <img id="brand_1_image" class="brand_image" alt="Car Image">
             </li>
-            <li>
+            <li onclick="window.location.href='ads.html'">
                 <p id="brand_2" class="brand_text">Загрузка...</p>
                 <img id="brand_2_image" class="brand_image" alt="Car Image">
             </li>
-            <li>
+            <li onclick="window.location.href='ads.html'">
                 <p id="brand_3" class="brand_text">Загрузка...</p>
                 <img id="brand_3_image" class="brand_image" alt="Car Image">
             </li>
-            <li>
+            <li onclick="window.location.href='ads.html'">
                 <p id="brand_4" class="brand_text">Загрузка...</p>
                 <img id="brand_4_image" class="brand_image" alt="Car Image">
             </li>
-            
         </ul>
+        <button class="view_all_button" onclick="window.location.href='ads.html'">Просмотреть все объявления</button>
     </section>
 
     <script>
@@ -96,7 +116,7 @@
                 return response.json();
             })
             .then(data => {
-                const maxItems = 5; // Количество объявлений
+                const maxItems = 4; // Количество объявлений
                 for (let i = 0; i < maxItems; i++) {
                     const item = data[i] || { name: 'Без названия', photo: 'placeholder.jpg' };
                     document.getElementById(`brand_${i + 1}`).textContent = item.name;
@@ -107,3 +127,4 @@
     </script>
 </body>
 </html>
+
