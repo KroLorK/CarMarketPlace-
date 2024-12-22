@@ -121,6 +121,81 @@
             border-radius: 10px;
             border: 1px solid rgb(141, 65, 65);
         }
+
+        .modal {
+    display: none; /* Скрываем по умолчанию */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Прокрутка при необходимости */
+    background-color: rgba(0, 0, 0, 0.5); /* Затемнение фона */
+}
+.ads_ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ads_ul li {
+            background-color: rgba(255, 235, 205, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 300px;
+            margin: 15px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .ads_ul li:hover {
+            
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .brand_image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .brand_text {
+            font-size: 18px;
+            font-weight: bold;
+            color: rgb(141, 65, 65);
+        }
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% сверху и центрированное по горизонтали */
+    padding: 20px;
+    border: 1px solid rgba(141, 65, 65, 0.5);
+    border-radius: 10px;
+    width: 80%; /* Ширина 80% */
+    max-width: 500px; /* Максимальная ширина */
+}
+
+.close {
+    color: rgb(141, 65, 65);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+}
+
     </style>
 </head>
 
@@ -162,6 +237,7 @@
     </section>
 
     <button class="submit-car-button" id="addCarButton">Добавить Автомобиль</button>
+    
 
     <div class="car-form" id="carForm" style="display: none;">
         <h2 class="form-title">Добавить Автомобиль</h2>
@@ -206,25 +282,66 @@
 
     <h2 class="search_ad">Ваши Объявления</h2>
     <section class="ads">
-        <ul class="ads_ul">
-            <li onclick="window.location.href='ads.html'">
-                <p id="brand_1" class="brand_text">Загрузка...</p>
-                <img id="brand_1_image" class="brand_image" alt="Car Image">
-            </li>
-            <li onclick="window.location.href='ads.html'">
-                <p id="brand_2" class="brand_text">Загрузка...</p>
-                <img id="brand_2_image" class="brand_image" alt="Car Image">
-            </li>
-            <li onclick="window.location.href='ads.html'">
-                <p id="brand_3" class="brand_text">Загрузка...</p>
-                <img id="brand_3_image" class="brand_image" alt="Car Image">
-            </li>
-            <li onclick="window.location.href='ads.html'">
-                <p id="brand_4" class="brand_text">Загрузка...</p>
-                <img id="brand_4_image" class="brand_image" alt="Car Image">
-            </li>
+        <ul class="ads_ul" id="adsUl">
+            <!-- Здесь будут загружены объявления -->
         </ul>
     </section>
+    
+
+    <button class="submit-car-button" id="createAdButton">Добавить объявление</button>
+
+    <!-- Модальное окно -->
+<div class="modal" id="adModal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2 class="form-title">Добавить Объявление</h2>
+        <div class="form-field">
+            <label for="description">Описание</label>
+            <input type="text" id="description" placeholder="Введите описание" required>
+        </div>
+        <div class="form-field">
+            <label for="price">Цена (₽)</label>
+            <input type="number" id="price" placeholder="Введите цену" required>
+        </div>
+        <div class="form-field">
+            <label for="car_id">Выберите Автомобиль</label>
+            <select id="car_id" required>
+                <option value="">Выберите автомобиль</option>
+                <!-- Здесь будут загружены автомобили пользователя -->
+            </select>
+        </div>
+        <div class="form-field">
+            <label for="photo">Фото</label>
+            <input type="file" id="photo" accept="image/*" required>
+        </div>
+        <button class="submit-car-button" id="submitAd">Создать Объявление</button>
+    </div>
+</div>
+
+    
+
+
+
+<script>
+        // Обработчик событий для кнопки "Добавить объявление"
+    document.getElementById('createAdButton').addEventListener('click', () => {
+        document.getElementById('adModal').style.display = 'block';
+    });
+
+    // Обработчик закрытия модального окна
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('adModal').style.display = 'none';
+    });
+
+    // Закрытие модального окна при клике вне его
+    window.onclick = function(event) {
+        const modal = document.getElementById('adModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+</script>
 
     <script>
         // Получение данных о пользователе
@@ -334,50 +451,91 @@
         });
 
         // Загрузка автомобилей пользователя
-        function loadUserCars() {
-            fetch(`http://localhost:3000/cars?user_id=${user.id}`) // Получаем автомобили для пользователя
-                .then(response => {
-                    if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
-                    return response.json();
-                })
-                .then(cars => {
-                    const carsUl = document.getElementById('carsUl');
-                    const noCarsMessage = document.getElementById('noCarsMessage');
-                    carsUl.innerHTML = ''; // Очищаем список автомобилей
-                    if (cars.length === 0) {
-                        noCarsMessage.style.display = 'block'; // Показываем сообщение, если автомобилей нет
-                    } else {
-                        noCarsMessage.style.display = 'none'; // Скрываем сообщение
-                        cars.forEach(car => {
-                            const li = document.createElement('li');
-                            li.className = 'car-item';
-                            li.dataset.car = JSON.stringify(car);  // Сохраняем данные автомобиля
-                            li.textContent = `Год: ${car.year}, Пробег: ${car.mileage} км, Модель: ${car.model}`;
-                            carsUl.appendChild(li);
-                        });
-                    }
-                })
-                .catch(error => console.error('Ошибка при получении автомобилей:', error));
-        }
+function loadUserCars() {
+    // Получаем автомобили для пользователя
+    fetch(`http://localhost:3000/cars?user_id=${user.id}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
+            return response.json();
+        })
+        .then(cars => {
+            const carSelect = document.getElementById('car_id');
+            carSelect.innerHTML = '<option value="">Выберите автомобиль</option>'; // Сброс списка в селекторе
 
-        // Инициализация загрузки автомобилей
-        loadUserCars();
+            const carsUl = document.getElementById('carsUl');
+            carsUl.innerHTML = ''; // Сброс списка в ul
+            
+            // Проверяем, есть ли у пользователя автомобили
+            if (cars.length === 0) {
+                // Можно показывать сообщение об отсутствии автомобилей
+                const noCarsMessage = document.getElementById('noCarsMessage');
+                noCarsMessage.style.display = 'block'; // Показываем сообщение, если автомобилей нет
+            } else {
+                // Скрываем сообщение, если автомобили есть
+                const noCarsMessage = document.getElementById('noCarsMessage');
+                noCarsMessage.style.display = 'none'; 
+
+                // Проходим по каждому автомобилю и добавляем его в селектор и список
+                cars.forEach(car => {
+                    // Добавляем в селектор
+                    const option = document.createElement('option');
+                    option.value = car.id; // Идентификатор автомобиля
+                    option.textContent = `Год: ${car.year}, Пробег: ${car.mileage} км, Модель: ${car.model}`;
+                    carSelect.appendChild(option);
+
+                    // Добавляем в список
+                    const li = document.createElement('li');
+                    li.className = 'car-item';
+                    li.dataset.car = JSON.stringify(car); // Сохраняем данные автомобиля
+                    li.textContent = `Год: ${car.year}, Пробег: ${car.mileage} км, Модель: ${car.model}`;
+                    carsUl.appendChild(li);
+                });
+            }
+        })
+        .catch(error => console.error('Ошибка при получении автомобилей:', error));
+}
+
+// Инициализация загрузки автомобилей при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    loadUserCars(); // Вызываем функцию загрузки
+});
+
+
 
         // Загрузка объявлений
-        fetch('http://localhost:3000/data')
-            .then(response => {
-                if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
-                return response.json();
-            })
-            .then(data => {
-                const maxItems = 4; // Количество объявлений
-                for (let i = 0; i < maxItems; i++) {
-                    const item = data[i] || { name: 'Без названия', photo: 'placeholder.jpg' };
-                    document.getElementById(`brand_${i + 1}`).textContent = item.name;
-                    document.getElementById(`brand_${i + 1}_image`).src = item.photo;
-                }
-            })
-            .catch(error => console.error('Ошибка при получении данных:', error));
+// Загрузка объявлений
+fetch('http://localhost:3000/ads') // Получаем объявления
+    .then(response => {
+        if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log(data); // Добавьте этот вывод для проверки значений
+        const adsUl = document.getElementById('adsUl');
+        adsUl.innerHTML = ''; // Очищаем предыдущие объявления
+
+        const maxItems = 4; // Максимальное количество объявлений для отображения
+        for (let i = 0; i < Math.min(data.length, maxItems); i++) {
+            const item = data[i] || { description: 'Без описания', price: 0, photo: 'placeholder.jpg' };
+            console.log(`Загружаю изображение: /uploads/${item.photo}`); // Проверка URL
+            const li = document.createElement('li');
+            li.style.cursor = 'pointer'; // Делает элемент кликабельным
+            li.innerHTML = `
+                <p class="ad_description">${item.description}</p>
+                <p class="ad_price">Цена: ${item.price} ₽</p>
+                <img class="ad_image" src="/uploads/${item.photo}" alt="Изображение объявления">
+            `;
+            li.onclick = () => {
+                // Можно добавить логику для перехода на детальную страницу объявления
+                window.location.href = `add.html?id=${item.id}`; // Переход на страницу объявления
+            };
+            adsUl.appendChild(li);
+        }
+    })
+    .catch(error => console.error('Ошибка при получении данных:', error));
+
+
+
 
         // Отображение формы добавления автомобиля
         document.getElementById('addCarButton').addEventListener('click', () => {
@@ -456,6 +614,49 @@
                 editMenu.style.display = 'none';
             }
         });
+
+        document.getElementById('submitAd').addEventListener('click', () => {
+    const description = document.getElementById('description').value.trim();
+    const price = document.getElementById('price').value.trim();
+    const carId = document.getElementById('car_id').value.trim();
+    const photoFile = document.getElementById('photo').files[0];
+
+    if (!description || !price || !carId || !photoFile) {
+        alert('Пожалуйста, заполните все поля!'); // Проверьте заполненность полей
+        return;
+    }
+
+    // Создаем объект FormData для отправки формы
+    const formData = new FormData();
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('car_id', carId);
+    formData.append('photo', photoFile);
+
+    fetch('http://localhost:3000/ads', {
+        method: 'POST',
+        body: formData, // Отправляем FormData
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка добавления объявления');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message); // Успешное создание объявления
+            document.getElementById('description').value = '';
+            document.getElementById('price').value = '';
+            document.getElementById('car_id').value = '';
+            document.getElementById('photo').value = '';  // Сбрасываем файл
+            // Здесь вы можете обновить список объявлений, если это необходимо
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Ошибка: ' + error.message);
+        });
+    });
+
     </script>
 </body>
 

@@ -4,6 +4,8 @@ const { Pool } = require('pg');
 const path = require('path');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const multer = require('multer'); // Импортируем multer для загрузки файлов
+const fs = require('fs'); // Импортируем fs для работы с файловой системой
 
 const app = express();
 const port = 3000;
@@ -17,10 +19,29 @@ const pool = new Pool({
     port: 5432, 
 });
 
+// Настройка multer для загрузки файлов
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Папка для загрузки файлов
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname)); // Уникальное имя файла
+    },
+});
+
+const upload = multer({ storage: storage });
+
+// Создание папки для загрузки, если её нет
+if (!fs.existsSync('uploads')) {
+    fs.mkdirSync('uploads');
+}
+
 // Используем middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Главная страница
 app.get('/', (req, res) => {
@@ -137,7 +158,7 @@ app.get('/cars', async (req, res) => {
     }
 });
 
-//изменения авто
+// Изменение авто
 app.put('/cars/:id', async (req, res) => {
     const { id } = req.params;
     const { year, mileage } = req.body;
@@ -159,8 +180,6 @@ app.put('/cars/:id', async (req, res) => {
     }
 });
 
-
-
 // Маршрут для удаления автомобиля
 app.delete('/cars/:id', async (req, res) => {
     const { id } = req.params;
@@ -178,6 +197,80 @@ app.delete('/cars/:id', async (req, res) => {
         res.status(500).json({ error: 'Ошибка сервера' });
     }
 });
+
+// Получение объявлений
+app.get('/ads', async (req, res) => {
+    const { brand, price, year } = req.query;
+    let sqlQuery = `SELECT ads.id, ads.description, ads.price, brands.name AS brand, cars.year, cars.mileage, models.name AS model 
+                    FROM ads 
+                    JOIN cars ON ads.car_id = cars.id 
+                    JOIN models ON cars.model_id = models.id 
+                    JOIN brands ON models.brand_id = brands.id
+                    WHERE TRUE`; // TRUE для облегчения условий
+    
+    const queryValues = [];
+    
+    if (brand) {
+        sqlQuery += ` AND brands.id = $${queryValues.length + 1}`;
+        queryValues.push(brand);
+    }
+    
+    if (price === 'low') {
+        sqlQuery += ` AND ads.price < (SELECT AVG(price) FROM ads)`;
+    } else if (price === 'high') {
+        sqlQuery += ` AND ads.price >= (SELECT AVG(price) FROM ads)`;
+    }
+
+    if (year) {
+        sqlQuery += ` AND cars.year >= $${queryValues.length + 1}`;
+        queryValues.push(year);
+    }
+
+    try {
+        const result = await pool.query(sqlQuery, queryValues);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Ошибка при получении объявлений:', err);
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+});
+
+// Добавление объявления
+app.post('/ads', upload.single('photo'), async (req, res) => {
+    const { description, price, car_id } = req.body;
+    const photo = req.file ? req.file.filename : null; // Убедитесь, что получили имя файла
+
+    // Проверка, что photo не равно null
+    if (!photo) {
+        return res.status(400).json({ error: 'Файл фотографии не загружен' });
+    }
+
+    try {
+        const result = await pool.query(
+            'INSERT INTO ads (description, price, car_id, photo) VALUES ($1, $2, $3, $4) RETURNING *',
+            [description, price, car_id, photo]
+        );
+        res.status(201).json({ message: 'Объявление успешно создано', ad: result.rows[0] });
+    } catch (err) {
+        console.error('Ошибка при добавлении объявления:', err);
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+});
+
+
+
+
+// Получение брендов
+app.get('/api/brands', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM brands');
+        res.json(result.rows); // Возвращаем массив с брендами
+    } catch (err) {
+        console.error('Ошибка при получении брендов:', err);
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+});
+
 
 
 // Запуск сервера
