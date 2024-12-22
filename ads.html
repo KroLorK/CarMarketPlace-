@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Объявления - Car Market Place</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        /* Ваши стили остаются здесь */
+        .filters_section {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background-color: rgba(255, 235, 205, 0.9);
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 80%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter_item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .filter_label {
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: rgb(141, 65, 65);
+        }
+
+        .filter_select, .filter_input {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid rgba(141, 65, 65, 0.5);
+            border-radius: 5px;
+            outline: none;
+            background-color: white;
+            width: 150px; /* Установка ширины для текстовых полей */
+        }
+
+        .ads_ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ads_ul li {
+            background-color: rgba(255, 235, 205, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 300px;
+            margin: 15px;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer; /* Указатель курсора изменяется на pointer */
+        }
+
+        .ads_ul li:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .brand_image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .brand_text {
+            font-size: 18px;
+            font-weight: bold;
+            color: rgb(141, 65, 65);
+        }
+
+        .ad-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <header class="container">
+        <img src="images/logo.png" class="logo_png" alt="Car Market Place Logo">
+        <div class="title">Car Market Place</div>
+        <nav>
+            <ul class="header_section">
+                <li><button id="main" class="button_on_page">Главная</button></li>
+                <li><button id="profile" class="header_section_button">Профиль</button></li>
+                <li><button id="about_us" class="header_section_button">О нас</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <script>
+        document.getElementById("profile").onclick = function() { window.location.href = "profile.html"; }
+        document.getElementById("main").onclick = function() { window.location.href = "index.html"; }
+        document.getElementById("about_us").onclick = function() { window.location.href = "about_us.html"; }
+    </script>
+
+    <h2 class="search_ad">Объявления</h2>
+
+    <section class="filters_section">
+        <div class="filter_item">
+            <label for="filter_brand" class="filter_label">Марка</label>
+            <select id="filter_brand" class="filter_select">
+                <option value="">Все</option>
+            </select>
+        </div>
+        <div class="filter_item">
+            <label for="filter_price" class="filter_label">Цена</label>
+            <input id="filter_price_input" class="filter_input" type="number" placeholder="Введите цену">
+        </div>
+        <div class="filter_item">
+            <label for="filter_year" class="filter_label">Год</label>
+            <input id="filter_year_input" class="filter_input" type="number" placeholder="Введите год">
+        </div>
+    </section>
+
+    <section class="ads">
+        <ul class="ads_ul" id="ads_list">
+            <!-- При загрузке будут динамически загружены объявления -->
+        </ul>
+    </section>
+
+    <script>
+        const loadBrands = () => {
+            fetch('http://localhost:3000/api/brands')
+                .then(response => {
+                    if (!response.ok) throw new Error('Ошибка при загрузке брендов');
+                    return response.json();
+                })
+                .then(brands => {
+                    const brandSelect = document.getElementById('filter_brand');
+                    brands.forEach(brand => {
+                        const option = document.createElement('option');
+                        option.value = brand.id; 
+                        option.innerHTML = brand.name; 
+                        brandSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Ошибка при получении брендов:', error));
+        };
+
+        const fetchAds = () => {
+            const brand = document.getElementById('filter_brand').value;
+            const price = document.getElementById('filter_price_input').value;
+            const year = document.getElementById('filter_year_input').value;
+
+            let query = `http://localhost:3000/ads?`;
+            if (brand) query += `brand=${brand}&`;
+            if (price) query += `price=${price}&`;
+            if (year) query += `year=${year}&`;
+
+            fetch(query)
+                .then(response => {
+                    if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    const adsList = document.getElementById('ads_list');
+                    adsList.innerHTML = ''; 
+
+                    if (data.length === 0) {
+                        adsList.innerHTML = '<li><p>Нет объявлений по вашим критериям.</p></li>'; 
+                    } else {
+                        data.forEach(item => {
+                            const adItem = document.createElement('li');
+                            adItem.classList.add('ad-card');
+                            adItem.innerHTML = `
+                                <p class="brand_text">${item.description || 'Без описания'}</p>
+                                <img class="brand_image" src="/uploads/${item.photo || 'placeholder.jpg'}" alt="Изображение автомобиля">
+                                <p class="ad-price">Цена: ${item.price} Руб.</p>
+                            `;
+                            adItem.onclick = () => {
+                                window.location.href = `add.html?id=${item.id}`; // Переход к конкретному объявлению
+                            };
+                            adsList.appendChild(adItem);
+                        });
+                    }
+                })
+                .catch(error => console.error('Ошибка при получении данных:', error));
+        };
+
+        document.getElementById('filter_brand').addEventListener('change', fetchAds);
+        document.getElementById('filter_price_input').addEventListener('input', fetchAds);
+        document.getElementById('filter_year_input').addEventListener('input', fetchAds);
+
+        loadBrands();
+    </script>
+</body>
+</html>

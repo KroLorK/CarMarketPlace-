@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр объявления - Car Market Place</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .ad-view-container {
+            margin: 20px auto;
+            width: 80%;
+            padding: 20px;
+            background-color: rgba(255, 235, 205, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .ad-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ad-details {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            color: rgb(141, 65, 65);
+        }
+
+        .ad-details-item {
+            background-color: white;
+            padding: 15px;
+            border: 1px solid rgba(141, 65, 65, 0.5);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .ad-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: rgb(141, 65, 65);
+        }
+    </style>
+</head>
+<body>
+    <header class="container">
+        <img src="images/logo.png" class="logo_png" alt="Car Market Place Logo">
+        <div class="title">Car Market Place</div>
+        <nav>
+            <ul class="header_section">
+                <li><button id="main" class="button_on_page">Главная</button></li>
+                <li><button id="profile" class="header_section_button">Профиль</button></li>
+                <li><button id="about_us" class="header_section_button">О нас</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="ad-view-container">
+        <h2 class="ad-title">Подробности объявления</h2>
+        <img id="adImage" class="ad-image" src="placeholder.jpg" alt="Изображение авто">
+        <div class="ad-details">
+            <div class="ad-details-item" id="adDescription">Описание: Не указано</div>
+            <div class="ad-details-item" id="adPrice">Цена: -</div>
+            <div class="ad-details-item" id="adYear">Год выпуска: -</div>
+            <div class="ad-details-item" id="adMileage">Пробег: - км</div>
+            <div class="ad-details-item" id="adModel">Модель: -</div>
+        </div>
+    </section>
+
+    <script>
+        const loadAdDetails = async () => {
+            const adId = new URLSearchParams(window.location.search).get('id');
+
+            if (!adId) {
+                alert('Объявление не найдено.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/ads?id=${adId}`);
+                if (!response.ok) {
+                    throw new Error('Ошибка загрузки данных объявления');
+                }
+                const ad = await response.json();
+
+                if (ad.length === 0) {
+                    alert('Объявление не найдено.');
+                    return;
+                }
+
+                const { description, price, photo, year, mileage, model, brand, first_name, last_name } = ad[0];
+
+                // Добавляем '/uploads/' к пути к изображению
+                document.getElementById('adImage').src = photo ? `/uploads/${photo}` : 'placeholder.jpg';
+                document.getElementById('adDescription').textContent = `Описание: ${description || 'Не указано'}`;
+                document.getElementById('adPrice').textContent = `Цена: ${price} ₽`;
+                
+                document.getElementById('adYear').textContent = `Год выпуска: ${year}`;
+                document.getElementById('adMileage').textContent = `Пробег: ${mileage} км`;
+                document.getElementById('adModel').textContent = `Модель: ${brand} ${model}`;
+            } catch (error) {
+                console.error('Ошибка загрузки объявления:', error);
+                alert('Не удалось загрузить данные объявления.');
+            }
+        };
+
+        loadAdDetails();
+    </script>
+</body>
+</html>

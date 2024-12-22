@@ -227,97 +227,97 @@
         </div>
         <button class="profile-button" onclick="window.location.href='ads.html'">Перейти к объявлениям</button>
     </div>
+    <div class = "admin_form" id = "admin_form" style = "display: none;">
+        <h2 class="search_ad">Ваши Автомобили</h2>
+        <section class="ads car-list" id="carList">
+            <div class="no-cars-message" id="noCarsMessage">У вас пока нет автомобилей.</div>
+            <ul class="ads_ul" id="carsUl">
+                <!-- Здесь будут загружены автомобили -->
+            </ul>
+        </section>
 
-    <h2 class="search_ad">Ваши Автомобили</h2>
-    <section class="ads car-list" id="carList">
-        <div class="no-cars-message" id="noCarsMessage">У вас пока нет автомобилей.</div>
-        <ul class="ads_ul" id="carsUl">
-            <!-- Здесь будут загружены автомобили -->
-        </ul>
-    </section>
+        <button class="submit-car-button" id="addCarButton">Добавить Автомобиль</button>
+        
+        
+        <div class="car-form" id="carForm" style="display: none;">
+            <h2 class="form-title">Добавить Автомобиль</h2>
+            <div class="form-field">
+                <label for="brand">Марка</label>
+                <select id="brand" required>
+                    <option value="">Выберите марку</option>
+                    <!-- Здесь будут загружены марки автомобилей -->
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="model">Модель</label>
+                <select id="model" disabled required>
+                    <option value="">Выберите модель</option>
+                    <!-- Здесь будут загружены модели автомобилей -->
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="mileage">Пробег (км)</label>
+                <input type="number" id="mileage" placeholder="Введите пробег" required>
+            </div>
+            <div class="form-field">
+                <label for="year">Год выпуска</label>
+                <input type="text" id="year" placeholder="Введите год выпуска" required>
+            </div>
+            <button class="submit-car-button" id="submitCar">Добавить автомобиль</button>
+        </div>
 
-    <button class="submit-car-button" id="addCarButton">Добавить Автомобиль</button>
-    
+        <div id="editMenu" style="display: none; position: absolute; background: white; border: 1px solid #ccc; border-radius: 5px; padding: 10px; z-index: 100;">
+            <h3>Редактировать автомобиль</h3>
+            <div class="form-field">
+                <label for="editYear">Год выпуска</label>
+                <input type="text" id="editYear" placeholder="Введите год выпуска" required>
+            </div>
+            <div class="form-field">
+                <label for="editMileage">Пробег (км)</label>
+                <input type="number" id="editMileage" placeholder="Введите пробег" required>
+            </div>
+            <button id="saveChangesButton">Сохранить изменения</button>
+            <button id="deleteCarButton" style="background-color: red; color: white;">Удалить автомобиль</button>
+        </div>
 
-    <div class="car-form" id="carForm" style="display: none;">
-        <h2 class="form-title">Добавить Автомобиль</h2>
-        <div class="form-field">
-            <label for="brand">Марка</label>
-            <select id="brand" required>
-                <option value="">Выберите марку</option>
-                <!-- Здесь будут загружены марки автомобилей -->
-            </select>
-        </div>
-        <div class="form-field">
-            <label for="model">Модель</label>
-            <select id="model" disabled required>
-                <option value="">Выберите модель</option>
-                <!-- Здесь будут загружены модели автомобилей -->
-            </select>
-        </div>
-        <div class="form-field">
-            <label for="mileage">Пробег (км)</label>
-            <input type="number" id="mileage" placeholder="Введите пробег" required>
-        </div>
-        <div class="form-field">
-            <label for="year">Год выпуска</label>
-            <input type="text" id="year" placeholder="Введите год выпуска" required>
-        </div>
-        <button class="submit-car-button" id="submitCar">Добавить автомобиль</button>
-    </div>
+        <h2 class="search_ad">Ваши Объявления</h2>
+        <section class="ads">
+            <ul class="ads_ul" id="adsUl">
+                <!-- Здесь будут загружены объявления -->
+            </ul>
+        </section>
+        
 
-    <div id="editMenu" style="display: none; position: absolute; background: white; border: 1px solid #ccc; border-radius: 5px; padding: 10px; z-index: 100;">
-        <h3>Редактировать автомобиль</h3>
-        <div class="form-field">
-            <label for="editYear">Год выпуска</label>
-            <input type="text" id="editYear" placeholder="Введите год выпуска" required>
-        </div>
-        <div class="form-field">
-            <label for="editMileage">Пробег (км)</label>
-            <input type="number" id="editMileage" placeholder="Введите пробег" required>
-        </div>
-        <button id="saveChangesButton">Сохранить изменения</button>
-        <button id="deleteCarButton" style="background-color: red; color: white;">Удалить автомобиль</button>
-    </div>
+        <button class="submit-car-button" id="createAdButton">Добавить объявление</button>
 
-    <h2 class="search_ad">Ваши Объявления</h2>
-    <section class="ads">
-        <ul class="ads_ul" id="adsUl">
-            <!-- Здесь будут загружены объявления -->
-        </ul>
-    </section>
-    
-
-    <button class="submit-car-button" id="createAdButton">Добавить объявление</button>
-
-    <!-- Модальное окно -->
-<div class="modal" id="adModal">
-    <div class="modal-content">
-        <span class="close" id="closeModal">&times;</span>
-        <h2 class="form-title">Добавить Объявление</h2>
-        <div class="form-field">
-            <label for="description">Описание</label>
-            <input type="text" id="description" placeholder="Введите описание" required>
+        <!-- Модальное окно -->
+    <div class="modal" id="adModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 class="form-title">Добавить Объявление</h2>
+            <div class="form-field">
+                <label for="description">Описание</label>
+                <input type="text" id="description" placeholder="Введите описание" required>
+            </div>
+            <div class="form-field">
+                <label for="price">Цена (₽)</label>
+                <input type="number" id="price" placeholder="Введите цену" required>
+            </div>
+            <div class="form-field">
+                <label for="car_id">Выберите Автомобиль</label>
+                <select id="car_id" required>
+                    <option value="">Выберите автомобиль</option>
+                    <!-- Здесь будут загружены автомобили пользователя -->
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="photo">Фото</label>
+                <input type="file" id="photo" accept="image/*" required>
+            </div>
+            <button class="submit-car-button" id="submitAd">Создать Объявление</button>
         </div>
-        <div class="form-field">
-            <label for="price">Цена (₽)</label>
-            <input type="number" id="price" placeholder="Введите цену" required>
-        </div>
-        <div class="form-field">
-            <label for="car_id">Выберите Автомобиль</label>
-            <select id="car_id" required>
-                <option value="">Выберите автомобиль</option>
-                <!-- Здесь будут загружены автомобили пользователя -->
-            </select>
-        </div>
-        <div class="form-field">
-            <label for="photo">Фото</label>
-            <input type="file" id="photo" accept="image/*" required>
-        </div>
-        <button class="submit-car-button" id="submitAd">Создать Объявление</button>
     </div>
 </div>
-
     
 
 
@@ -344,22 +344,32 @@
 </script>
 
     <script>
-        // Получение данных о пользователе
         const user = {
-            first_name: localStorage.getItem('first_name'),
-            last_name: localStorage.getItem('last_name'),
-            email: localStorage.getItem('email'),
-            id: localStorage.getItem('user_id') // ID пользователя
-        };
+        first_name: localStorage.getItem('first_name'),
+        last_name: localStorage.getItem('last_name'),
+        email: localStorage.getItem('email'),
+        id: localStorage.getItem('user_id'), // ID пользователя
+        role: localStorage.getItem('role') // Получаем роль пользователя
+    };
 
-        if (user.first_name && user.last_name && user.email) {
-            document.getElementById('first_name').innerText = user.first_name;
-            document.getElementById('last_name').innerText = user.last_name;
-            document.getElementById('email').innerText = user.email;
+    // Проверка, есть ли необходимая информация о пользователе
+    if (user.first_name && user.last_name && user.email) {
+        document.getElementById('first_name').innerText = user.first_name;
+        document.getElementById('last_name').innerText = user.last_name;
+        document.getElementById('email').innerText = user.email;
+        
+        // Вывод роли пользователя
+        console.log(user.role);
+        if (user.role == 'admin') {
+        document.getElementById('admin_form').style.display = 'block'; // Показываем форму добавления автомобиля
         } else {
-            alert("Пожалуйста, войдите в систему.");
-            window.location.href = 'index.html'; // Перенаправление на главную страницу
+            document.getElementById('admin_form').style.display = 'none'; // Скрываем форму добавления автомобиля
         }
+        
+    } else {
+        alert("Пожалуйста, войдите в систему.");
+        window.location.href = 'index.html'; // Перенаправление на главную страницу
+    }
 
         // Загрузка марок автомобилей
         fetch('http://localhost:3000/data')  // Путь к API для загрузки марок
@@ -510,8 +520,8 @@ fetch('http://localhost:3000/ads') // Получаем объявления
         return response.json();
     })
     .then(data => {
-        console.log(data); // Добавьте этот вывод для проверки значений
-        const adsUl = document.getElementById('adsUl');
+        console.log(data); 
+        
         adsUl.innerHTML = ''; // Очищаем предыдущие объявления
 
         const maxItems = 4; // Максимальное количество объявлений для отображения

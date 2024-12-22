@@ -6,6 +6,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const multer = require('multer'); // Импортируем multer для загрузки файлов
 const fs = require('fs'); // Импортируем fs для работы с файловой системой
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const port = 3000;
@@ -81,6 +82,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Вход пользователя
+// Вход пользователя
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -92,13 +94,18 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Неверные учетные данные' });
         }
 
+        // Создаем токен с ролью
+        const token = jwt.sign({ id: user.id, role: user.role }, 'Ваш_секретный_ключ', { expiresIn: '1h' });
+
+        // Возврат токена и информации о пользователе
         res.json({ 
-            message: 'Успешный вход', 
+            token, // добавляем токен в ответ
             user: { 
                 id: user.id, 
                 first_name: user.first_name, 
                 last_name: user.last_name, 
-                email: user.email 
+                email: user.email, 
+                role: user.role // добавляем роль
             } 
         });
     } catch (err) {
@@ -201,7 +208,7 @@ app.delete('/cars/:id', async (req, res) => {
 // Получение объявлений
 app.get('/ads', async (req, res) => {
     const { brand, price, year } = req.query;
-    let sqlQuery = `SELECT ads.id, ads.description, ads.price, brands.name AS brand, cars.year, cars.mileage, models.name AS model 
+    let sqlQuery = `SELECT ads.id, ads.description, ads.price, ads.photo, brands.name AS brand, cars.year, cars.mileage, models.name AS model 
                     FROM ads 
                     JOIN cars ON ads.car_id = cars.id 
                     JOIN models ON cars.model_id = models.id 
@@ -234,6 +241,7 @@ app.get('/ads', async (req, res) => {
         res.status(500).json({ error: 'Ошибка сервера' });
     }
 });
+
 
 // Добавление объявления
 app.post('/ads', upload.single('photo'), async (req, res) => {
